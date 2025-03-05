@@ -10,12 +10,13 @@ video.onended = () => {
 };
 
 video.addEventListener("error", function (event) {
-  console.log(event);
   video.src = "ats-banner.mp4";
   video.play();
 });
 
 getClips();
+
+let index = 0;
 
 async function getClips() {
   try {
@@ -23,14 +24,19 @@ async function getClips() {
     const videos = await res.json();
 
     if (videos.length > 0) {
-      const pos = Math.round(Math.random() * (videos.length - 1));
-      video.src = videos[pos].url;
+      video.src = videos[index].url;
     } else {
       video.src = "ats-banner.mp4";
       return;
     }
 
     video.play();
+
+    index++;
+
+    if (index >= videos.length) {
+      index = 0;
+    }
   } catch (error) {
     console.log("Error fetching videos.");
     console.log(error);
